@@ -2,10 +2,10 @@ package base;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
-import javafx.util.Pair;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.AbstractMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
@@ -45,10 +45,10 @@ public class UrlShortner {
     }
 
     @VisibleForTesting
-    static final Map<Integer, Pair<Integer, Integer>> map = ImmutableMap.of(
-            0, new Pair<>(48, 57),
-            1, new Pair<>(65, 90),
-            2, new Pair<>(97, 122)
+    static final Map<Integer, Map.Entry<Integer, Integer>> map = ImmutableMap.of(
+            0, new AbstractMap.SimpleEntry<>(48, 57),
+            1, new AbstractMap.SimpleEntry<>(65, 90),
+            2, new AbstractMap.SimpleEntry<>(97, 122)
     );
 
     public static String convert(String inputUrl, Random random) {
@@ -58,12 +58,12 @@ public class UrlShortner {
         //lower 97 122
         for (int i = 0; i < 4; i++) {
             int typeOfChar = random.nextInt(Integer.MAX_VALUE) % 2;
-            Pair<Integer, Integer> range = map.get(typeOfChar);
+            Map.Entry<Integer, Integer> range = map.get(typeOfChar);
             Integer lowerBound = range.getKey();
             Integer upperBound = range.getValue();
             int rand = lowerBound + random.nextInt(Integer.MAX_VALUE) % (upperBound - lowerBound + 1);
             Character newChar = (char) rand;
-            sb.append(newChar.toString());
+            sb.append(newChar);
         }
 
         return String.format("%s/%s", baseDomain, sb.toString());
